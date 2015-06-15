@@ -1,10 +1,10 @@
 {
   "name": "phmlabs/html",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "library",
-  "description": "phmLabs component for initializing class using a yaml file / array",
+  "description": "whm library for handling html files",
   "keywords": [],
-  "homepage": "https://www.thewebhatesme.com",
+  "homepage": "http://www.thewebhatesme.com",
   "license": "MIT",
   "autoload": {
     "psr-4": {

@@ -12,6 +12,8 @@ class Document
     private $outgoingLinks = null;
     private $dependencies = null;
     private $images = null;
+    private $cssFiles = null;
+    private $jsFiles = null;
 
     public function __construct($htmlContent)
     {
@@ -19,12 +21,32 @@ class Document
         $this->crawler = new Crawler($this->content);
     }
 
+    /**
+     * @param UriInterface $originUrl
+     * @return UriInterface[]
+     */
     public function getImages(UriInterface $originUrl = null)
     {
         if (!$this->images) {
             $this->images = $this->getUrls("//img", "src", $originUrl);
         }
         return $this->images;
+    }
+
+    public function getCssFiles(UriInterface $originUrl = null)
+    {
+        if (!$this->cssFiles) {
+            $this->cssFiles = $this->getUrls("//link", "href", $originUrl);
+        }
+        return $this->cssFiles;
+    }
+
+    public function getJsFiles(UriInterface $originUrl = null)
+    {
+        if (!$this->jsFiles) {
+            $this->jsFiles = $this->getUrls("//script", "src", $originUrl);
+        }
+        return $this->jsFiles;
     }
 
     public function getOutgoingLinks(UriInterface $originUrl = null)
@@ -40,12 +62,29 @@ class Document
         if (!$this->dependencies) {
             $deps = $this->getOutgoingLinks($originUrl);
             $deps = array_merge($deps, $this->getImages($originUrl));
-            $deps = array_merge($deps, $this->getUrls("//link", "href", $originUrl));
-            $deps = array_merge($deps, $this->getUrls("//script", "src", $originUrl));
+            $deps = array_merge($deps, $this->getCssFiles($originUrl));
+            $deps = array_merge($deps, $this->getCssFiles($originUrl));
+            $deps = array_merge($deps, $this->getJsFiles($originUrl));
 
             $this->dependencies = $deps;
         }
         return $this->dependencies;
+    }
+
+    private function isFollowableUrl($url)
+    {
+        if (strpos($url, 'data:') !== false) {
+            return false;
+        }
+        if ($urlParts = parse_url($url)) {
+            if (isset($urlParts['scheme']) && !in_array($urlParts['scheme'], ['http', 'https'], true)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -89,7 +128,7 @@ class Document
     {
         $urls = array();
         foreach ($this->crawler->filterXPath($xpath) as $node) {
-            if ($node->hasAttribute($attribute)) {
+            if ($node->hasAttribute($attribute) && $this->isFollowableUrl($node->getAttribute($attribute))) {
                 if ($originUrl) {
                     $url = $this->createAbsoulteUrl(new Uri($node->getAttribute($attribute)), $originUrl);
                 } else {
@@ -101,3 +140,4 @@ class Document
         return $urls;
     }
 }
+
