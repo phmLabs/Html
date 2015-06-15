@@ -1,7 +1,5 @@
 {
   "name": "phmlabs/html",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "version": "1.0.0",
   "type": "library",
   "description": "phmLabs component for initializing class using a yaml file / array",
@@ -16,6 +14,6 @@
 
   "require": {
     "symfony/dom-crawler": "~2.2",
-    "psr/http-message": "dev-master"
+    "psr/http-message": "1.0"
   }
 }
