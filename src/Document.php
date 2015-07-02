@@ -57,18 +57,32 @@ class Document
         return $this->outgoingLinks;
     }
 
+    /**
+     * @param UriInterface $originUrl
+     * @return UriInterface[]
+     */
     public function getDependencies(UriInterface $originUrl = null)
     {
-        if (!$this->dependencies) {
+        if (is_null($this->dependencies)) {
             $deps = $this->getOutgoingLinks($originUrl);
+
             $deps = array_merge($deps, $this->getImages($originUrl));
-            $deps = array_merge($deps, $this->getCssFiles($originUrl));
             $deps = array_merge($deps, $this->getCssFiles($originUrl));
             $deps = array_merge($deps, $this->getJsFiles($originUrl));
 
             $this->dependencies = $deps;
         }
         return $this->dependencies;
+    }
+
+    public function getUnorderedDependencies(UriInterface $originUrl = null)
+    {
+        $deps = $this->getDependencies($originUrl);
+        usort($deps, function ($a, $b) {
+            return md5($a) < md5($b);
+        });
+
+        return $deps;
     }
 
     private function isFollowableUrl($url)
@@ -140,4 +154,3 @@ class Document
         return $urls;
     }
 }
-
