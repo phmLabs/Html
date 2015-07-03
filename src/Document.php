@@ -36,7 +36,7 @@ class Document
     public function getCssFiles(UriInterface $originUrl = null)
     {
         if (!$this->cssFiles) {
-            $this->cssFiles = $this->getUrls("//link", "href", $originUrl);
+            $this->cssFiles = $this->getUrls("//link[@rel='stylesheet']", "href", $originUrl);
         }
         return $this->cssFiles;
     }
