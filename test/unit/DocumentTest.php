@@ -73,4 +73,24 @@ class DocumentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($currentUrls, $expectedUrls);
     }
 
+    public function testGetCssFiles()
+    {
+        $document = new Document(file_get_contents(__DIR__ . '/fixtures/referencedUrls.html'));
+
+        $urls = $document->getCssFiles(new Uri('http://www.example.com/test/'));
+
+        foreach ($urls as $url) {
+            $currentUrls[] = (string) $url;
+        }
+
+        $expectedUrls = array(
+            'http://fonts.googleapis.com/css?family=Dancing+Script'
+        );
+
+        sort($expectedUrls);
+        sort($currentUrls);
+
+        $this->assertEquals($currentUrls, $expectedUrls);
+    }
+
 }
