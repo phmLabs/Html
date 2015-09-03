@@ -61,10 +61,14 @@ class Document
      * @param UriInterface $originUrl
      * @return UriInterface[]
      */
-    public function getDependencies(UriInterface $originUrl = null)
+    public function getDependencies(UriInterface $originUrl = null, $includeOutgoingLinks = true)
     {
         if (is_null($this->dependencies)) {
-            $deps = $this->getOutgoingLinks($originUrl);
+            $deps = array();
+
+            if ($includeOutgoingLinks) {
+                $deps = $this->getOutgoingLinks($originUrl);
+            }
 
             $deps = array_merge($deps, $this->getImages($originUrl));
             $deps = array_merge($deps, $this->getCssFiles($originUrl));
