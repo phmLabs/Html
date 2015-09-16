@@ -1,6 +1,5 @@
 {
   "name": "phmlabs/html",
-  "version": "1.0.5",
   "type": "library",
   "description": "whm library for handling html files",
   "keywords": [],
