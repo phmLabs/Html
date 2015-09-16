@@ -127,13 +127,16 @@ class Document
                     $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $uri->getPath() . $query;
                 } else {
                     // relative path
-                    if (strpos(strrev($originUrl->getPath()), '/') !== 0) {
-                        $separator = '/';
+                    $pathParts = pathinfo($originUrl->getPath());
+                    if (array_key_exists('dirname', $pathParts)) {
+                        $dirname = $pathParts['dirname'];
+                        if( $dirname != "/") {
+                            $dirname .= "/";
+                        }
                     } else {
-                        $separator = '';
+                        $dirname = "/";
                     }
-                    $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $originUrl->getPath() . $separator . $uri->getPath() . $query;
-                }
+                    $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $dirname . $uri->getPath() . $query;                }
             }
             $resultUri = new Uri($uriString);
         } else {
