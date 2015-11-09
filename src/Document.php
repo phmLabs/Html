@@ -145,6 +145,7 @@ class Document
                     $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $dirname . $uri->getPath() . $query;
                 }
             }
+
             $resultUri = new Uri($uriString);
         } else {
             $resultUri = $uri;
@@ -161,6 +162,9 @@ class Document
 
                 if( $this->repairUrls) {
                     $uriString = trim($uriString);
+                    if(preg_match("/\r|\n/", $uriString)) {
+                        $uriString = preg_replace('/[ \t]+/', '', preg_replace('/[\r|\n]+/', "", $uriString));
+                    }
                 }
 
                 if ($originUrl) {
@@ -168,6 +172,7 @@ class Document
                 } else {
                     $url = new Uri($uriString);
                 }
+
                 $urls[$uriString] = $url;
             }
         }
