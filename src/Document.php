@@ -14,11 +14,17 @@ class Document
     private $images = null;
     private $cssFiles = null;
     private $jsFiles = null;
+    private $repairUrls;
 
-    public function __construct($htmlContent)
+    /**
+     * @param $htmlContent the html content
+     * @param bool|false $repairUrls try to repair broken uris like a browser would do
+     */
+    public function __construct($htmlContent, $repairUrls = false)
     {
         $this->content = $htmlContent;
         $this->crawler = new Crawler($this->content);
+        $this->repairUrls = $repairUrls;
     }
 
     /**
@@ -130,13 +136,14 @@ class Document
                     $pathParts = pathinfo($originUrl->getPath());
                     if (array_key_exists('dirname', $pathParts)) {
                         $dirname = $pathParts['dirname'];
-                        if( $dirname != "/") {
+                        if ($dirname != "/") {
                             $dirname .= "/";
                         }
                     } else {
                         $dirname = "/";
                     }
-                    $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $dirname . $uri->getPath() . $query;                }
+                    $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $dirname . $uri->getPath() . $query;
+                }
             }
             $resultUri = new Uri($uriString);
         } else {
@@ -150,12 +157,18 @@ class Document
         $urls = array();
         foreach ($this->crawler->filterXPath($xpath) as $node) {
             if ($node->hasAttribute($attribute) && $this->isFollowableUrl($node->getAttribute($attribute))) {
-                if ($originUrl) {
-                    $url = $this->createAbsoulteUrl(new Uri($node->getAttribute($attribute)), $originUrl);
-                } else {
-                    $url = new Uri($node->getAttribute($attribute));
+                $uriString = $node->getAttribute($attribute);
+
+                if( $this->repairUrls) {
+                    $uriString = trim($uriString);
                 }
-                $urls[$node->getAttribute($attribute)] = $url;
+
+                if ($originUrl) {
+                    $url = $this->createAbsoulteUrl(new Uri($uriString), $originUrl);
+                } else {
+                    $url = new Uri($uriString);
+                }
+                $urls[$uriString] = $url;
             }
         }
         return $urls;
