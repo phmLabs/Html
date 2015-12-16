@@ -118,6 +118,10 @@ class Document
      */
     private function createAbsoulteUrl(UriInterface $uri, UriInterface $originUrl)
     {
+        if ((string)$uri == "") {
+            return $originUrl;
+        }
+        
         if ($uri->getScheme() === '') {
             if ($uri->getQuery() !== '') {
                 $query = '?' . $uri->getQuery();
