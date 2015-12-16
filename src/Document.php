@@ -118,8 +118,14 @@ class Document
      */
     private function createAbsoulteUrl(UriInterface $uri, UriInterface $originUrl)
     {
+        // @example href=""
         if ((string)$uri == "") {
             return $originUrl;
+        }
+
+        // @example href="?cat=1"
+        if (strpos((string)$uri, "?") === 0) {
+            return new Uri($originUrl->getScheme() . "://" . $originUrl->getHost() . $originUrl->getPath() . (string)$uri);
         }
         
         if ($uri->getScheme() === '') {
