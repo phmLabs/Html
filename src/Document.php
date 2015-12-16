@@ -119,7 +119,7 @@ class Document
     private function createAbsoulteUrl(UriInterface $uri, UriInterface $originUrl)
     {
         // @example href=""
-        if ((string)$uri == "") {
+        if ((string)$uri == "" || strpos((string)$uri, "#") === 0) {
             return $originUrl;
         }
 
