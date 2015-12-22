@@ -94,6 +94,7 @@ class Uri implements UriInterface
         }
 
         if (!empty($uri)) {
+            $uri = urldecode(trim($uri));
             $this->parseUri($uri);
         }
     }
