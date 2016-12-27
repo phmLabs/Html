@@ -55,7 +55,9 @@ class Uri implements UriInterface
     private $host = '';
 
     private $session;
-    
+
+    private $cookies = array();
+
     /**
      * @var int
      */
@@ -179,7 +181,7 @@ class Uri implements UriInterface
             for ($i = count($domainElements) - 1; $i > count($domainElements) - $depth - 1; --$i) {
                 $host = $domainElements[$i] . '.' . $host;
             }
-            return substr($host, 0, strlen($host)-1);
+            return substr($host, 0, strlen($host) - 1);
         }
         return $this->host;
     }
@@ -285,7 +287,7 @@ class Uri implements UriInterface
             ));
         }
 
-        $port = (int) $port;
+        $port = (int)$port;
 
         if ($port === $this->port) {
             // Do nothing if no change was made.
@@ -609,7 +611,7 @@ class Uri implements UriInterface
     {
         return rawurlencode($matches[0]);
     }
-   
+
     public function setSessionIdentifier($identifier)
     {
         $this->session = $identifier;
@@ -618,5 +620,20 @@ class Uri implements UriInterface
     public function getSessionIdentifier()
     {
         return $this->session;
+    }
+
+    public function hasCookies()
+    {
+        return count($this->cookies) > 0;
+    }
+
+    private function getCookies()
+    {
+        return $this->cookies;
+    }
+
+    private function addCookie($key, $value)
+    {
+        $this->cookies[$key] = $value;
     }
 }
