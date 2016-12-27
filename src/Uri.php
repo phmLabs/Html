@@ -54,6 +54,8 @@ class Uri implements UriInterface
      */
     private $host = '';
 
+    private $session;
+    
     /**
      * @var int
      */
@@ -606,5 +608,15 @@ class Uri implements UriInterface
     private function urlEncodeChar(array $matches)
     {
         return rawurlencode($matches[0]);
+    }
+   
+    public function setSessionIdentifier($identifier)
+    {
+        $this->session = $identifier;
+    }
+
+    public function getSessionIdentifier()
+    {
+        return $this->session;
     }
 }
