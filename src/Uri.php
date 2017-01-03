@@ -627,13 +627,24 @@ class Uri implements UriInterface
         return count($this->cookies) > 0;
     }
 
-    private function getCookies()
+    public function getCookies()
     {
         return $this->cookies;
     }
 
-    private function addCookie($key, $value)
+    public function addCookie($key, $value)
     {
         $this->cookies[$key] = $value;
+    }
+
+    public function getCookieString()
+    {
+        $cookieString = "";
+
+        foreach ($this->cookies as $key => $value) {
+            $cookieString .= $key . '=' . $value . '; ';
+        }
+
+        return $cookieString;
     }
 }
