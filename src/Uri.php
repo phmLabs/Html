@@ -637,6 +637,13 @@ class Uri implements UriInterface
         $this->cookies[$key] = $value;
     }
 
+    public function addCookies(array $cookies)
+    {
+        foreach ($cookies as $key => $value) {
+            $this->addCookie($key, $value);
+        }
+    }
+
     public function getCookieString()
     {
         $cookieString = "";
