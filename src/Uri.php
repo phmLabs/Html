@@ -90,6 +90,9 @@ class Uri implements UriInterface
      */
     public function __construct($uri = '')
     {
+        if ($uri instanceof UriInterface) {
+            $uri = (string)$uri;
+        }
         if (!is_string($uri)) {
             throw new InvalidArgumentException(sprintf(
                 'URI passed to constructor must be a string; received "%s"',
