@@ -17,7 +17,7 @@ class Document
     private $repairUrls;
 
     /**
-     * @param $htmlContent the html content
+     * @param string $htmlContent the html content
      * @param bool|false $repairUrls try to repair broken uris like a browser would do
      */
     public function __construct($htmlContent, $repairUrls = false)
@@ -65,7 +65,7 @@ class Document
 
     /**
      * @param UriInterface $originUrl
-     * @return UriInterface[]
+     * @return Uri[]
      */
     public function getDependencies(UriInterface $originUrl = null, $includeOutgoingLinks = true)
     {
