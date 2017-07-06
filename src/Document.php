@@ -63,12 +63,27 @@ class Document
         return $this->outgoingLinks;
     }
 
+    private function handleBaseHeader(UriInterface $originUrl)
+    {
+        $baseCrawler = $this->crawler->filterXPath('//html/head/base/@href');
+        $baseUrlNode = $baseCrawler->getNode(0);
+        if ($baseUrlNode) {
+            if (strpos($baseUrlNode->nodeValue, '/') === 0) {
+                $originUrl = $originUrl->withPath($baseUrlNode->nodeValue);
+            }
+        }
+
+        return $originUrl;
+    }
+
     /**
      * @param UriInterface $originUrl
-     * @return Uri[]
+     * @return UriInterface[]
      */
-    public function getDependencies(UriInterface $originUrl = null, $includeOutgoingLinks = true)
+    public function getDependencies(UriInterface $originUrl, $includeOutgoingLinks = true)
     {
+        $originUrl = $this->handleBaseHeader($originUrl);
+
         if (is_null($this->dependencies)) {
             $deps = array();
 

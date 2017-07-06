@@ -15,7 +15,7 @@ use Psr\Http\Message\UriInterface;
  * state of the current instance and return a new instance that contains the
  * changed state.
  */
-class Uri implements UriInterface
+class Uri implements CookieAware, UriInterface
 {
     /**
      * Sub-delimiters used in query strings and fragments.
