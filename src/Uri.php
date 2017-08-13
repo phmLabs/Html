@@ -657,4 +657,55 @@ class Uri implements CookieAware, UriInterface
 
         return $cookieString;
     }
+
+    /**
+     * @param UriInterface $uri
+     * @return UriInterface
+     */
+    public static function createAbsoluteUrl(UriInterface $uri, UriInterface $originUrl)
+    {
+        // @example href=""
+        if ((string)$uri == "" || strpos((string)$uri, "#") === 0) {
+            return $originUrl;
+        }
+
+        // @example href="?cat=1"
+        if (strpos((string)$uri, "?") === 0) {
+            return new Uri($originUrl->getScheme() . "://" . $originUrl->getHost() . $originUrl->getPath() . (string)$uri);
+        }
+
+        if ($uri->getScheme() === '') {
+            if ($uri->getQuery() !== '') {
+                $query = '?' . $uri->getQuery();
+            } else {
+                $query = '';
+            }
+
+            if ($uri->getHost() !== '') {
+                $uriString = $originUrl->getScheme() . '://' . $uri->getHost() . $uri->getPath() . $query;
+            } else {
+                if (strpos($uri->getPath(), '/') === 0) {
+                    // absolute path
+                    $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $uri->getPath() . $query;
+                } else {
+                    // relative path
+                    $pathParts = pathinfo($originUrl->getPath());
+                    if (array_key_exists('dirname', $pathParts)) {
+                        $dirname = $pathParts['dirname'];
+                        if ($dirname != "/") {
+                            $dirname .= "/";
+                        }
+                    } else {
+                        $dirname = "/";
+                    }
+                    $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $dirname . $uri->getPath() . $query;
+                }
+            }
+
+            $resultUri = new Uri($uriString);
+        } else {
+            $resultUri = $uri;
+        }
+        return $resultUri;
+    }
 }
