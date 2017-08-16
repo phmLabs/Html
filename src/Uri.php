@@ -706,6 +706,15 @@ class Uri implements CookieAware, UriInterface
         } else {
             $resultUri = $uri;
         }
-        return $resultUri;
+
+        $cleanUri = self::removeRelativeParts($resultUri);
+
+        return $cleanUri;
+    }
+
+    private static function removeRelativeParts(UriInterface $uri)
+    {
+        $cleanPath = preg_replace('~[^/]+/../~', '', $uri->getPath());
+        return $uri->withPath($cleanPath);
     }
 }
