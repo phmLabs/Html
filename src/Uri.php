@@ -716,9 +716,11 @@ class Uri implements CookieAware, UriInterface
     {
         $count = 1;
         $cleanPath = $uri->getPath();
+
         while ($count != 0) {
-            $cleanPath = preg_replace('~[^\/]+\/\.\.\/~', '', $cleanPath, -1, $count);
+            $cleanPath = preg_replace('~[^\/\.]+\/\.\.\/~', '', $cleanPath, -1, $count);
         }
+
         return $uri->withPath($cleanPath);
     }
 }
