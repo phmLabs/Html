@@ -714,7 +714,7 @@ class Uri implements CookieAware, UriInterface
 
     private static function removeRelativeParts(UriInterface $uri)
     {
-        $cleanPath = preg_replace('~[^/]+/../~', '', $uri->getPath());
+        $cleanPath = preg_replace('~[^\/]+\/\.\.\/~', '', $uri->getPath());
         return $uri->withPath($cleanPath);
     }
 }
