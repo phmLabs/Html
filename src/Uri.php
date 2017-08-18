@@ -689,16 +689,20 @@ class Uri implements CookieAware, UriInterface
                     $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $uri->getPath() . $query;
                 } else {
                     // relative path
-                    $pathParts = pathinfo($originUrl->getPath());
-                    if (array_key_exists('dirname', $pathParts)) {
-                        $dirname = $pathParts['dirname'];
-                        if ($dirname != "/") {
-                            $dirname .= "/";
-                        }
+                    if (stripos($originUrl->getPath(), '/') === 0) {
+                        $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $originUrl->getPath() . $uri->getPath() . $query;
                     } else {
-                        $dirname = "/";
+                        $pathParts = pathinfo($originUrl->getPath());
+                        if (array_key_exists('dirname', $pathParts)) {
+                            $dirname = $pathParts['dirname'];
+                            if ($dirname != "/") {
+                                $dirname .= "/";
+                            }
+                        } else {
+                            $dirname = "/";
+                        }
+                        $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $dirname . $uri->getPath() . $query;
                     }
-                    $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $dirname . $uri->getPath() . $query;
                 }
             }
 
