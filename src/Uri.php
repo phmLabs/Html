@@ -689,7 +689,7 @@ class Uri implements CookieAware, UriInterface
                     $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $uri->getPath() . $query;
                 } else {
                     // relative path
-                    if (stripos($originUrl->getPath(), '/') === 0) {
+                    if (strrpos($originUrl->getPath(), '/') === strlen($originUrl->getPath()) - 1) {
                         $uriString = $originUrl->getScheme() . '://' . $originUrl->getHost() . $originUrl->getPath() . $uri->getPath() . $query;
                     } else {
                         $pathParts = pathinfo($originUrl->getPath());
