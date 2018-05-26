@@ -126,16 +126,6 @@ class Document
         return false;
     }
 
-    /**
-     * @param $urlString
-     * @param UriInterface $originUrl
-     * @return UriInterface
-     */
-    private function createAbsoulteUrl(UriInterface $uri, UriInterface $originUrl)
-    {
-
-    }
-
     private function getUrls($xpath, $attribute, UriInterface $originUrl = null)
     {
         $urls = array();
@@ -151,7 +141,11 @@ class Document
                 }
 
                 if ($originUrl) {
-                    $url = Uri::createAbsoluteUrl(new Uri($uriString), $originUrl);
+                    try {
+                        $url = Uri::createAbsoluteUrl(new Uri($uriString), $originUrl);
+                    } catch (\InvalidArgumentException $e) {
+                        
+                    }
                 } else {
                     $url = new Uri($uriString);
                 }
