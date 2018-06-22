@@ -727,4 +727,22 @@ class Uri implements CookieAware, UriInterface
 
         return $uri->withPath($cleanPath);
     }
+
+    private static function getDomain(UriInterface $uri)
+    {
+        $host = $uri->getHost();
+
+        $host_names = explode(".", $host);
+
+        if (count($host_names) > 1) {
+            return $host_names[count($host_names) - 2] . "." . $host_names[count($host_names) - 1];
+        } else {
+            return $host_names[0];
+        }
+    }
+
+    public static function isEqualDomain(UriInterface $uri1, UriInterface $uri2)
+    {
+        return self::getDomain($uri1) == self::getDomain($uri2);
+    }
 }
