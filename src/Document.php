@@ -78,9 +78,11 @@ class Document
 
     /**
      * @param UriInterface $originUrl
+     * @param bool $includeOutgoingLinks
+     * @param bool $includeAssets
      * @return UriInterface[]
      */
-    public function getDependencies(UriInterface $originUrl, $includeOutgoingLinks = true)
+    public function getDependencies(UriInterface $originUrl, $includeOutgoingLinks = true, $includeAssets = true)
     {
         $originUrl = $this->handleBaseHeader($originUrl);
 
@@ -91,18 +93,21 @@ class Document
                 $deps = $this->getOutgoingLinks($originUrl);
             }
 
-            $deps = array_merge($deps, $this->getImages($originUrl));
-            $deps = array_merge($deps, $this->getCssFiles($originUrl));
-            $deps = array_merge($deps, $this->getJsFiles($originUrl));
+            if ($includeAssets) {
+                $deps = array_merge($deps, $this->getImages($originUrl));
+                $deps = array_merge($deps, $this->getCssFiles($originUrl));
+                $deps = array_merge($deps, $this->getJsFiles($originUrl));
+            }
 
             $this->dependencies = $deps;
         }
         return $this->dependencies;
     }
 
-    public function getUnorderedDependencies(UriInterface $originUrl = null)
+    public function getUnorderedDependencies(UriInterface $originUrl = null, $includeOutgoingLinks = true, $includeAssets = true)
     {
-        $deps = $this->getDependencies($originUrl);
+        $deps = $this->getDependencies($originUrl, $includeOutgoingLinks, $includeAssets);
+
         usort($deps, function ($a, $b) {
             return md5($a) < md5($b);
         });
@@ -144,7 +149,7 @@ class Document
                     try {
                         $url = Uri::createAbsoluteUrl(new Uri($uriString), $originUrl);
                     } catch (\InvalidArgumentException $e) {
-                        
+
                     }
                 } else {
                     $url = new Uri($uriString);
