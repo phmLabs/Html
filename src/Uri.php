@@ -745,7 +745,7 @@ class Uri implements CookieAware, UriInterface
     {
         $parsedUrl = parse_url((string)$uri);
         $host = explode('.', $parsedUrl['host']);
-        $subdomains =  array_slice($host, 0, count($host) - 2);
+        $subdomains = array_slice($host, 0, count($host) - 2);
 
         return implode('.', $subdomains);
     }
@@ -753,5 +753,11 @@ class Uri implements CookieAware, UriInterface
     public static function isEqualDomain(UriInterface $uri1, UriInterface $uri2)
     {
         return self::getDomain($uri1) == self::getDomain($uri2);
+    }
+
+    public static function isBasicAuth(UriInterface $uri)
+    {
+        $urlString = (string)$uri;
+        return (bool)preg_match('^://(.*):(.*)@^', $urlString, $matches);
     }
 }
