@@ -55,12 +55,23 @@ class Document
         return $this->jsFiles;
     }
 
-    public function getOutgoingLinks(UriInterface $originUrl = null)
+    public function getOutgoingLinks(UriInterface $originUrl = null, $includeExternalLinks = true)
     {
         if (!$this->outgoingLinks) {
             $this->outgoingLinks = $this->getUrls("//a", "href", $originUrl);
         }
-        return $this->outgoingLinks;
+
+        if ($includeExternalLinks || is_null($originUrl)) {
+            return $this->outgoingLinks;
+        } else {
+            $links = [];
+            foreach ($this->outgoingLinks as $outgoingLink) {
+                if (Uri::isEqualDomain($originUrl, $outgoingLink)) {
+                    $links[] = $outgoingLink;
+                }
+            }
+            return $links;
+        }
     }
 
     private function handleBaseHeader(UriInterface $originUrl)
