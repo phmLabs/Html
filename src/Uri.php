@@ -88,11 +88,16 @@ class Uri implements CookieAware, UriInterface
      * @param string $uri
      * @throws InvalidArgumentException on non-string $uri argument
      */
-    public function __construct($uri = '')
+    public function __construct($uri = '', $encodePercent = false)
     {
         if ($uri instanceof UriInterface) {
             $uri = (string)$uri;
         }
+
+        if ($encodePercent) {
+            $uri = self::encodeUrl($uri);
+        }
+
         if (!is_string($uri)) {
             throw new InvalidArgumentException(sprintf(
                 'URI passed to constructor must be a string; received "%s"',
@@ -765,5 +770,35 @@ class Uri implements CookieAware, UriInterface
     {
         preg_match('^://(.*):(.*)@^', (string)$uri, $matches);
         return ['username' => $matches[1], 'password' => $matches[2]];
+    }
+
+    public static function encodeUrl($urlString)
+    {
+        $parsedUrl = parse_url($urlString);
+
+        if (array_key_exists('scheme', $parsedUrl)) {
+            $domainWithScheme = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . '/';
+            $path = str_replace($domainWithScheme, '', $urlString);
+        } else {
+            $domainWithScheme = '';
+            $path = $urlString;
+        }
+
+        $normalPath = str_replace('/', 'encodedSlash', $path);
+        $normalPath = str_replace('?', 'encodedQuestionMark', $normalPath);
+        $normalPath = str_replace('&', 'encodedAmpersand', $normalPath);
+        $normalPath = str_replace('=', 'encodedEquals', $normalPath);
+        $normalPath = str_replace('#', 'encodedHash', $normalPath);
+        $normalPath = str_replace('%', 'encodedPercent', $normalPath);
+
+        $encodedUrl = $domainWithScheme . urlencode($normalPath);
+        $encodedUrl = str_replace('encodedSlash', '/', $encodedUrl);
+        $encodedUrl = str_replace('encodedQuestionMark', '?', $encodedUrl);
+        $encodedUrl = str_replace('encodedAmpersand', '&', $encodedUrl);
+        $encodedUrl = str_replace('encodedEquals', '=', $encodedUrl);
+        $encodedUrl = str_replace('encodedHash', '#', $encodedUrl);
+        $encodedUrl = str_replace('encodedPercent', '%', $encodedUrl);
+
+        return $encodedUrl;
     }
 }

@@ -55,10 +55,10 @@ class Document
         return $this->jsFiles;
     }
 
-    public function getOutgoingLinks(UriInterface $originUrl = null, $includeExternalLinks = true)
+    public function getOutgoingLinks(UriInterface $originUrl = null, $includeExternalLinks = true, $percentEncode = false)
     {
         if (!$this->outgoingLinks) {
-            $this->outgoingLinks = $this->getUrls("//a", "href", $originUrl);
+            $this->outgoingLinks = $this->getUrls("//a", "href", $originUrl, $percentEncode);
         }
 
         if ($includeExternalLinks || is_null($originUrl)) {
@@ -142,7 +142,7 @@ class Document
         return false;
     }
 
-    private function getUrls($xpath, $attribute, UriInterface $originUrl = null)
+    private function getUrls($xpath, $attribute, UriInterface $originUrl = null, $encodePercent = false)
     {
         $urls = array();
         foreach ($this->crawler->filterXPath($xpath) as $node) {
@@ -158,12 +158,14 @@ class Document
 
                 if ($originUrl) {
                     try {
-                        $url = Uri::createAbsoluteUrl(new Uri($uriString), $originUrl);
+                        $newUri = new Uri($uriString, $encodePercent);
+                        $url = Uri::createAbsoluteUrl($newUri, $originUrl);
                     } catch (\InvalidArgumentException $e) {
 
                     }
                 } else {
-                    $url = new Uri($uriString);
+                    var_dump('ELSE');
+                    $url = new Uri($uriString, $encodePercent);
                 }
 
                 $urls[$uriString] = $url;
