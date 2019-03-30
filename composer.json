@@ -12,8 +12,8 @@
   },
 
   "require": {
-    "symfony/dom-crawler": "~3.3",
-    "symfony/css-selector": "~3.3",
+    "symfony/dom-crawler": "~4.2",
+    "symfony/css-selector": "~4.2",
     "psr/http-message": "1.0"
   }
 }
