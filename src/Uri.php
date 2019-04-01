@@ -777,7 +777,7 @@ class Uri implements CookieAware, UriInterface
         $parsedUrl = parse_url($urlString);
 
         if (array_key_exists('scheme', $parsedUrl)) {
-            $domainWithScheme = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . '/';
+            $domainWithScheme = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
             $path = str_replace($domainWithScheme, '', $urlString);
         } else {
             $domainWithScheme = '';

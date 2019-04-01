@@ -164,7 +164,6 @@ class Document
 
                     }
                 } else {
-                    var_dump('ELSE');
                     $url = new Uri($uriString, $encodePercent);
                 }
 
