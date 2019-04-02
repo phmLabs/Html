@@ -57,6 +57,8 @@ class Document
 
     public function getOutgoingLinks(UriInterface $originUrl = null, $includeExternalLinks = true, $percentEncode = false)
     {
+        $originUrl = $this->handleBaseHeader($originUrl);
+
         if (!$this->outgoingLinks) {
             $this->outgoingLinks = $this->getUrls("//a", "href", $originUrl, $percentEncode);
         }
@@ -78,9 +80,12 @@ class Document
     {
         $baseCrawler = $this->crawler->filterXPath('//html/head/base/@href');
         $baseUrlNode = $baseCrawler->getNode(0);
+
         if ($baseUrlNode) {
             if (strpos($baseUrlNode->nodeValue, '/') === 0) {
                 $originUrl = $originUrl->withPath($baseUrlNode->nodeValue);
+            } else if (strpos($baseUrlNode->nodeValue, 'http') === 0) {
+                $originUrl = new Uri($baseUrlNode->nodeValue);
             }
         }
 
