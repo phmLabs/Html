@@ -37,7 +37,7 @@ class Document
             $this->images = $this->getUrls("//img", "src", $originUrl);
         }
         return $this->images;
-    }
+}
 
     public function getCssFiles(UriInterface $originUrl = null)
     {

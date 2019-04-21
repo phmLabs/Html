@@ -10,9 +10,8 @@
       "whm\\Html\\": "src"
     }
   },
-
   "require": {
-    "symfony/dom-crawler": "~4.2",
+    "symfony/dom-crawler": "~2.3|~3.0|~4.0",
     "symfony/css-selector": "~4.2",
     "psr/http-message": "1.0"
   }
