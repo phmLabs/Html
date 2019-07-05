@@ -27,6 +27,12 @@ class Document
         $this->repairUrls = $repairUrls;
     }
 
+    public static function removeScriptTags($htmlContent)
+    {
+        $withoutScriptTags = preg_replace('^<script(.*?)</script>^', '', $htmlContent);
+        return $withoutScriptTags;
+    }
+
     /**
      * @param UriInterface $originUrl
      * @return UriInterface[]
@@ -37,7 +43,7 @@ class Document
             $this->images = $this->getUrls("//img", "src", $originUrl);
         }
         return $this->images;
-}
+    }
 
     public function getCssFiles(UriInterface $originUrl = null)
     {
