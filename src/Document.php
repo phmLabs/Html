@@ -29,11 +29,16 @@ class Document
 
     public static function removeScriptTags($htmlContent)
     {
-        $pattern = '#<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>#mi';
-        //$pattern = '^<script(.*?)</script>^';
+        $htmlContentWithoutWrite = preg_replace('#\.write\(\'(.*?)\'\)#is', '.write("REPLACED_BY_SMOKE")', $htmlContent);
+        $htmlContentWithoutWrite = preg_replace('#\.write\("(.*?)"\)#is', '.write("REPLACED_BY_SMOKE")', $htmlContentWithoutWrite);
 
-        $withoutScriptTags = preg_replace($pattern, '', $htmlContent);
-        return $withoutScriptTags;
+        // $pattern = '#<script\b[^<]*(?:(?!</script>)<[^<]*)*</script>#mi';
+        // $pattern = '^<script(.*?)</script>^';
+        $pattern = '#<script(.*?)>(.*?)</script>#is';
+
+        $htmlContentWithoutScript = preg_replace($pattern, '', $htmlContentWithoutWrite);
+
+        return $htmlContentWithoutScript;
     }
 
     /**
