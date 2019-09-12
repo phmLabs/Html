@@ -784,7 +784,8 @@ class Uri implements CookieAware, UriInterface
             $path = $urlString;
         }
 
-        $normalPath = str_replace('/', 'encodedSlash', $path);
+        $normalPath = str_replace(' ', 'encodedSpace', $path);
+        $normalPath = str_replace('/', 'encodedSlash', $normalPath);
         $normalPath = str_replace('@', 'encodedAt', $normalPath);
         $normalPath = str_replace('?', 'encodedQuestionMark', $normalPath);
         $normalPath = str_replace('&', 'encodedAmpersand', $normalPath);
@@ -799,6 +800,7 @@ class Uri implements CookieAware, UriInterface
 
         $encodedUrl = $domainWithScheme . urlencode($normalPath);
 
+        $encodedUrl = str_replace('encodedSpace', ' ', $encodedUrl);
         $encodedUrl = str_replace('encodedSlash', '/', $encodedUrl);
         $encodedUrl = str_replace('encodedQuestionMark', '?', $encodedUrl);
         $encodedUrl = str_replace('encodedAmpersand', '&', $encodedUrl);
