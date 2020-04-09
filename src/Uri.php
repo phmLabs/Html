@@ -56,7 +56,7 @@ class Uri implements CookieAware, UriInterface
 
     private $session;
 
-    private $cookies = array();
+    private $cookies = [];
 
     /**
      * @var int
@@ -545,7 +545,7 @@ class Uri implements CookieAware, UriInterface
 
         $parts = explode('&', $query);
         foreach ($parts as $index => $part) {
-            list($key, $value) = $this->splitQueryValue($part);
+            [$key, $value] = $this->splitQueryValue($part);
             if ($value === null) {
                 $parts[$index] = $this->filterQueryOrFragment($key);
                 continue;
@@ -770,6 +770,19 @@ class Uri implements CookieAware, UriInterface
     {
         preg_match('^://(.*):(.*)@^', (string)$uri, $matches);
         return ['username' => $matches[1], 'password' => $matches[2]];
+    }
+
+    /**
+     * Remove the basic auth string from the uri
+     *
+     * return Uri
+     *
+     * @created 2020-04-09
+     */
+    static public function removeBasicAuthCredentials(UriInterface $uri)
+    {
+        $newUri = preg_replace('^://(.*):(.*)@^', "://", (string)$uri);
+        return new Uri($newUri);
     }
 
     public static function encodeUrl($urlString)
