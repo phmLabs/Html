@@ -769,7 +769,7 @@ class Uri implements CookieAware, UriInterface
     public static function getBasicAuthCredentials(UriInterface $uri)
     {
         preg_match('^://(.*):(.*)@^', (string)$uri, $matches);
-        return ['username' => $matches[1], 'password' => $matches[2]];
+        return ['username' => urldecode($matches[1]), 'password' => urldecode($matches[2])];
     }
 
     /**
