@@ -776,7 +776,20 @@ class Uri implements CookieAware, UriInterface
     public static function getBasicAuthCredentials(UriInterface $uri)
     {
         preg_match('^://(.*):(.*)@^', (string)$uri, $matches);
-        return ['username' => $matches[1], 'password' => $matches[2]];
+        return ['username' => urldecode($matches[1]), 'password' => urldecode($matches[2])];
+    }
+
+    /**
+     * Remove the basic auth string from the uri
+     *
+     * return Uri
+     *
+     * @created 2020-04-09
+     */
+    static public function removeBasicAuthCredentials(UriInterface $uri)
+    {
+        $newUri = preg_replace('^://(.*):(.*)@^', "://", (string)$uri);
+        return new Uri($newUri);
     }
 
     public static function encodeUrl($urlString)
