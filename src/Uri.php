@@ -56,7 +56,7 @@ class Uri implements CookieAware, UriInterface
 
     private $session;
 
-    private $cookies = array();
+    private $cookies = [];
 
     /**
      * @var int
@@ -545,7 +545,7 @@ class Uri implements CookieAware, UriInterface
 
         $parts = explode('&', $query);
         foreach ($parts as $index => $part) {
-            list($key, $value) = $this->splitQueryValue($part);
+            [$key, $value] = $this->splitQueryValue($part);
             if ($value === null) {
                 $parts[$index] = $this->filterQueryOrFragment($key);
                 continue;
@@ -733,7 +733,13 @@ class Uri implements CookieAware, UriInterface
         return $uri->withPath($cleanPath);
     }
 
-    private static function getDomain(UriInterface $uri)
+    /**
+     * Return the domain of the given uri.
+     *
+     * @param UriInterface $uri
+     * @return string
+     */
+    static public function getDomain(UriInterface $uri)
     {
         $host = $uri->getHost();
 
@@ -749,6 +755,7 @@ class Uri implements CookieAware, UriInterface
     public static function getSubdomain(UriInterface $uri)
     {
         $parsedUrl = parse_url((string)$uri);
+
         $host = explode('.', $parsedUrl['host']);
         $subdomains = array_slice($host, 0, count($host) - 2);
 
