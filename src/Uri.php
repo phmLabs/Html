@@ -86,6 +86,8 @@ class Uri implements CookieAware, UriInterface
 
     /**
      * @param string $uri
+     * @param bool $encodePercent
+     *
      * @throws InvalidArgumentException on non-string $uri argument
      */
     public function __construct($uri = '', $encodePercent = false)
@@ -803,6 +805,8 @@ class Uri implements CookieAware, UriInterface
             $domainWithScheme = '';
             $path = $urlString;
         }
+
+        $domainWithScheme = idn_to_ascii($domainWithScheme);
 
         $normalPath = str_replace(' ', 'encodedSpace', $path);
         $normalPath = str_replace('/', 'encodedSlash', $normalPath);

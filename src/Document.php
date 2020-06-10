@@ -117,7 +117,7 @@ class Document
         $originUrl = $this->handleBaseHeader($originUrl);
 
         if (is_null($this->dependencies)) {
-            $deps = array();
+            $deps = [];
 
             if ($includeOutgoingLinks) {
                 $deps = $this->getOutgoingLinks($originUrl);
@@ -138,7 +138,8 @@ class Document
     {
         $deps = $this->getDependencies($originUrl, $includeOutgoingLinks, $includeAssets);
 
-        usort($deps, function ($a, $b) {
+        usort($deps, function ($a, $b)
+        {
             return md5($a) < md5($b);
         });
 
@@ -163,7 +164,8 @@ class Document
 
     private function getUrls($xpath, $attribute, UriInterface $originUrl = null, $encodePercent = false)
     {
-        $urls = array();
+        $urls = [];
+
         foreach ($this->crawler->filterXPath($xpath) as $node) {
             if ($node->hasAttribute($attribute) && $this->isFollowableUrl($node->getAttribute($attribute))) {
                 $uriString = $node->getAttribute($attribute);
@@ -189,6 +191,7 @@ class Document
                 $urls[$uriString] = $url;
             }
         }
+
         return $urls;
     }
 }
